@@ -48,8 +48,11 @@ void TrimPic::TrimPicture()
 
     //batch progress
     int showindex=0;
+    int resultmaxIndex=name.count()/(w*h);
+    if(name.count()%(w*h)>0)
+        resultmaxIndex++;
 #pragma omp parallel for
-    for(index=0;index<name.count()/(w*h);index++)
+    for(index=0;index<resultmaxIndex;index++)
     {
         //prepare a white pic
         QImage result=QImage(width,height,QImage::Format_RGB888);

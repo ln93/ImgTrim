@@ -7,7 +7,7 @@ A tiny C++ program to combine several pictures into one bigger picture for print
 
 你当然可以自由地配置软件的参数——参数们并不多。
 最终结果类似下图：
-![sample]("https://github.com/ln93/ImgTrim/raw/master/sample.png")
+![sample](https://github.com/ln93/ImgTrim/raw/master/sample.png)
 
 ## 程序性能
 作者使用i7-4980hq拼接56张照片（600MB），耗时8秒。由于介质是机械硬盘，瓶颈基本就在硬盘速度上了。

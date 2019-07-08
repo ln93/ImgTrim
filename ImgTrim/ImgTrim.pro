@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+RC_ICONS = logo.ico
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = ImgTrim

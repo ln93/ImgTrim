@@ -15,6 +15,8 @@ public:
     int height;
     int w;
     int h;
+    int quality=80;
+    int forceResize=0;
 
 signals:
     void progress(int progress);

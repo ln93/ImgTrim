@@ -40,6 +40,8 @@ void MainWindow::on_startTrimPushButton_clicked()
     Trim->width=ui->WidthLineEdit->text().toInt();
     Trim->height=ui->HeightLineEdit->text().toInt();
     Trim->LineWidth=ui->whiteLineWidthLineEdit->text().toInt();
+    Trim->quality=ui->imgQualitySpinBox->text().toInt();
+    Trim->forceResize=ui->ForceResizeCheckBox->isChecked();
     QThread *Thread=new QThread;
     Trim->moveToThread(Thread);
     connect(Thread,SIGNAL(started()),Trim,SLOT(TrimPicture()));

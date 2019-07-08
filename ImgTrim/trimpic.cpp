@@ -17,6 +17,15 @@ QImage TrimPic::resizeAndFullfill(QImage input,int w,int h)
         rot.rotate(90);
         input=input.transformed(rot);
     }
+    if(forceResize)
+    {
+        input=input.scaled(w,h);
+        QPointF point;
+        point.setX(0);
+        point.setY(0);
+        Painter.drawImage(point,input);
+        return(result);
+    }
     double ratio=(double)w/input.width();
     QPointF point;
     point.setX(0);
@@ -73,7 +82,7 @@ void TrimPic::TrimPicture()
                 //save img
             }
 
-        result.save(Path+"//result//"+QString::number(index)+".jpg");
+        result.save(Path+"//result//"+QString::number(index)+".jpg","JPG",quality);
 #pragma omp critical
         {
             emit progress(showindex*w*h*100/name.count());

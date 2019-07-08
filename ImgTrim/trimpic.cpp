@@ -1,7 +1,7 @@
 #include "trimpic.h"
 #include <QPainter>
 #include <QDir>
-
+#include "omp.h"
 TrimPic::TrimPic(QObject *parent) : QObject(parent)
 {
 
@@ -40,7 +40,6 @@ void TrimPic::TrimPicture()
     QDir dir(Path);
     dir.mkdir("result");
     //init pic size
-    double ratio=(double)width/height;
     int index=0;
     //get File Name
     QStringList name,filters;
@@ -48,7 +47,9 @@ void TrimPic::TrimPicture()
     name=dir.entryList(filters,QDir::Files|QDir::Readable,QDir::Name);
 
     //batch progress
-    for(index=0;index*w*h<name.count();index++)
+    int showindex=0;
+#pragma omp parallel for
+    for(index=0;index<name.count()/(w*h);index++)
     {
         //prepare a white pic
         QImage result=QImage(width,height,QImage::Format_RGB888);
@@ -61,7 +62,7 @@ void TrimPic::TrimPicture()
                 QPointF point;
                 point.setX(i*width/w+LineWidth);
                 point.setY(j*height/h+LineWidth);
-                if(index+i*h+j>=name.count())
+                if(index*w*h+i*h+j>=name.count())
                     break;
                 QImage img1(Path+"\\"+name[index*w*h+i*h+j]);
                 img1=resizeAndFullfill(img1,width/w-2*LineWidth,height/h-2*LineWidth);
@@ -70,7 +71,12 @@ void TrimPic::TrimPicture()
             }
 
         result.save(Path+"//result//"+QString::number(index)+".jpg");
-        emit progress(index*w*h*100/name.count());
+#pragma omp critical
+        {
+            emit progress(showindex*w*h*100/name.count());
+            showindex++;
+        }
     }
+    emit progress(100);
 
 }

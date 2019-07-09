@@ -15,3 +15,4 @@ A tiny C++ program to combine several pictures into one bigger picture for print
 作者使用i7-4980hq拼接56张照片（600MB），耗时8秒。由于介质是机械硬盘，瓶颈基本就在硬盘速度上了。
 ## 为什么要使用本程序
 冲印一张大照片比冲印6张小照片便宜多了————我们垃圾佬就是要省钱！
+当然，如果你需要给照片批量重命名，添加白框，批量缩放等等，使用本软件也是可以的。

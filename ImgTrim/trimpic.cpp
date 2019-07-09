@@ -54,7 +54,16 @@ void TrimPic::TrimPicture()
     QStringList name,filters;
     filters<< "*.jpg" <<"*.png" << "*.bmp";
     name=dir.entryList(filters,QDir::Files|QDir::Readable,QDir::Name);
-
+    //is the dir empty?
+    if(name.count()==0)
+    {
+        echoInfo(QString("文件夹中不含有效图片。"));
+        return;
+    }
+    else
+    {
+        echoInfo(QString("图像合成中……"));
+    }
     //batch progress
     int showindex=0;
     int resultmaxIndex=name.count()/(w*h);
@@ -90,5 +99,6 @@ void TrimPic::TrimPicture()
         }
     }
     emit progress(100);
+    echoInfo(QString("图像已保存在")+Path+QString("/result文件夹下。"));
 
 }

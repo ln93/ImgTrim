@@ -20,6 +20,7 @@ public:
 
 signals:
     void progress(int progress);
+    void echoInfo(QString info);
 private:
     QImage resizeAndFullfill(QImage input,int w,int h);
 public slots:

@@ -36,9 +36,9 @@
     <property name="geometry">
      <rect>
       <x>80</x>
-      <y>90</y>
+      <y>140</y>
       <width>241</width>
-      <height>81</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="text">
@@ -319,9 +319,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>30</y>
+      <y>90</y>
       <width>381</width>
-      <height>51</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="value">
@@ -331,6 +331,25 @@
      <set>Qt::AlignCenter</set>
     </property>
     <property name="textVisible">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="infoLabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>381</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>点击“开始拼接”，选择一个含有图片的文件夹。</string>
+    </property>
+    <property name="scaledContents">
+     <bool>false</bool>
+    </property>
+    <property name="wordWrap">
      <bool>true</bool>
     </property>
    </widget>

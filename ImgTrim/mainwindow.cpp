@@ -25,13 +25,19 @@ void MainWindow::on_startTrimPushButton_clicked()
     QString Path;
     if(QF->exec())
     {
-        QStringList FP=QF->selectedFiles();
+        QStringList FP;
+        FP=QF->selectedFiles();
         if(!FP.isEmpty())
         {
             Path=FP[0];
         }
+        else
+        {
+            return;
+        }
     }
-
+    if(Path=="")//fix linux related issues
+        return;
     TrimPic *Trim=new TrimPic;
     //init
     Trim->h=ui->FrameHLineEdit->text().toInt();
@@ -48,6 +54,7 @@ void MainWindow::on_startTrimPushButton_clicked()
     connect(Trim,SIGNAL(progress(int)),ui->progressBar,SLOT(setValue(int)));
     connect(Thread,SIGNAL(finished()),Trim,SLOT(deleteLater()));
     connect(Thread,SIGNAL(finished()),Thread,SLOT(deleteLater()));
+    connect(Trim,SIGNAL(echoInfo(QString)),ui->infoLabel,SLOT(setText(QString)));
     Thread->start();
 }
 

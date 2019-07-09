@@ -6,6 +6,10 @@ TrimPic::TrimPic(QObject *parent) : QObject(parent)
 {
 
 }
+TrimPic::~TrimPic()
+{
+    unlockButton(true);
+}
 QImage TrimPic::resizeAndFullfill(QImage input,int w,int h)
 {
     QImage result=QImage(w,h,QImage::Format_RGB888);
@@ -47,7 +51,6 @@ void TrimPic::TrimPicture()
 {
     //init path
     QDir dir(Path);
-    dir.mkdir("result");
     //init pic size
     int index=0;
     //get File Name
@@ -58,12 +61,15 @@ void TrimPic::TrimPicture()
     if(name.count()==0)
     {
         echoInfo(QString("文件夹中不含有效图片。"));
+        unlockButton(true);
+        quit();
         return;
     }
     else
     {
         echoInfo(QString("图像合成中……"));
     }
+    dir.mkdir("result");
     //batch progress
     int showindex=0;
     int resultmaxIndex=name.count()/(w*h);
@@ -101,5 +107,6 @@ void TrimPic::TrimPicture()
     emit progress(100);
     echoInfo(QString("图像已保存在")+Path+QString("/result文件夹下。"));
     unlockButton(true);
+    quit();
 
 }

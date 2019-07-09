@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "trimpic.h"
 
 namespace Ui {
 class MainWindow;
@@ -22,6 +23,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QThread *Thread;
+    TrimPic *Trim;
 };
 
 #endif // MAINWINDOW_H

@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "trimpic.h"
 #include <QFileDialog>
 #include <QThread>
 
@@ -9,6 +8,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    Thread=new QThread;
+    Trim=new TrimPic;
+    Trim->moveToThread(Thread);
+    connect(Thread,SIGNAL(started()),Trim,SLOT(TrimPicture()));
+    connect(Trim,SIGNAL(progress(int)),ui->progressBar,SLOT(setValue(int)));
+    connect(Trim,SIGNAL(quit()),Thread,SLOT(quit()));
+    connect(Trim,SIGNAL(unlockButton(bool)),ui->startTrimPushButton,SLOT(setEnabled(bool)));
+    connect(Trim,SIGNAL(echoInfo(QString)),ui->infoLabel,SLOT(setText(QString)));
+    //Let the OS to do GC
 }
 
 MainWindow::~MainWindow()
@@ -18,7 +26,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_startTrimPushButton_clicked()
 {
-    ui->startTrimPushButton->setEnabled(false);
     QFileDialog *QF=new QFileDialog(this);
     QF->setFileMode(QFileDialog::Directory);
     QF->setWindowTitle(QString("打开含有图片的文件夹"));
@@ -39,7 +46,8 @@ void MainWindow::on_startTrimPushButton_clicked()
     }
     if(Path=="")//fix linux related issues
         return;
-    TrimPic *Trim=new TrimPic;
+    ui->startTrimPushButton->setEnabled(false);
+
     //init
     Trim->h=ui->FrameHLineEdit->text().toInt();
     Trim->w=ui->FrameWLineEdit->text().toInt();
@@ -49,14 +57,8 @@ void MainWindow::on_startTrimPushButton_clicked()
     Trim->LineWidth=ui->whiteLineWidthLineEdit->text().toInt();
     Trim->quality=ui->imgQualityHorizontalSlider->value();
     Trim->forceResize=ui->ForceResizeCheckBox->isChecked();
-    QThread *Thread=new QThread;
-    Trim->moveToThread(Thread);
-    connect(Thread,SIGNAL(started()),Trim,SLOT(TrimPicture()));
-    connect(Trim,SIGNAL(progress(int)),ui->progressBar,SLOT(setValue(int)));
-    connect(Thread,SIGNAL(finished()),Trim,SLOT(deleteLater()));
-    connect(Thread,SIGNAL(finished()),Thread,SLOT(deleteLater()));
-    connect(Trim,SIGNAL(unlockbutton(bool)),ui->startTrimPushButton,SLOT(setEnabled(bool)));
-    connect(Trim,SIGNAL(echoInfo(QString)),ui->infoLabel,SLOT(setText(QString)));
+
+
     Thread->start();
 }
 

@@ -9,6 +9,7 @@ class TrimPic : public QObject
     Q_OBJECT
 public:
     explicit TrimPic(QObject *parent = nullptr);
+    ~TrimPic();
     QString Path;
     int LineWidth;
     int width;
@@ -22,6 +23,7 @@ signals:
     void progress(int progress);
     void echoInfo(QString info);
     void unlockButton(bool T);
+    void quit();
 private:
     QImage resizeAndFullfill(QImage input,int w,int h);
 public slots:

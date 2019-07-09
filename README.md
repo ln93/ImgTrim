@@ -9,7 +9,7 @@ A tiny C++ program to combine several pictures into one bigger picture for print
 程序拥有可观的可调参数——分辨率，拼接规则，配置图像拉伸或是按比例缩放，边框宽度，jpg压缩比等。
 
 最终结果类似下图：
-![sample](https://github.com/ln93/ImgTrim/raw/master/sample.png)
+![sample](https://github.com/ln93/ImgTrim/raw/master/sample.PNG)
 
 ## 程序性能
 作者使用i7-4980hq拼接56张照片（600MB），耗时8秒。由于介质是机械硬盘，瓶颈基本就在硬盘速度上了。

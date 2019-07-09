@@ -33,6 +33,9 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QPushButton" name="startTrimPushButton">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -43,6 +46,15 @@
     </property>
     <property name="text">
      <string>开始拼接</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+    <property name="autoExclusive">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QTabWidget" name="tabWidget">

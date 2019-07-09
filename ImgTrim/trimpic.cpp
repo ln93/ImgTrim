@@ -100,5 +100,6 @@ void TrimPic::TrimPicture()
     }
     emit progress(100);
     echoInfo(QString("图像已保存在")+Path+QString("/result文件夹下。"));
+    unlockButton(true);
 
 }

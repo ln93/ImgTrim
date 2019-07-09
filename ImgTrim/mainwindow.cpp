@@ -18,6 +18,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_startTrimPushButton_clicked()
 {
+    ui->startTrimPushButton->setEnabled(false);
     QFileDialog *QF=new QFileDialog(this);
     QF->setFileMode(QFileDialog::Directory);
     QF->setWindowTitle(QString("打开含有图片的文件夹"));
@@ -54,6 +55,7 @@ void MainWindow::on_startTrimPushButton_clicked()
     connect(Trim,SIGNAL(progress(int)),ui->progressBar,SLOT(setValue(int)));
     connect(Thread,SIGNAL(finished()),Trim,SLOT(deleteLater()));
     connect(Thread,SIGNAL(finished()),Thread,SLOT(deleteLater()));
+    connect(Trim,SIGNAL(unlockbutton(bool)),ui->startTrimPushButton,SLOT(setEnabled(bool)));
     connect(Trim,SIGNAL(echoInfo(QString)),ui->infoLabel,SLOT(setText(QString)));
     Thread->start();
 }

@@ -21,6 +21,7 @@ public:
 signals:
     void progress(int progress);
     void echoInfo(QString info);
+    void unlockButton(bool T);
 private:
     QImage resizeAndFullfill(QImage input,int w,int h);
 public slots:

@@ -76,7 +76,7 @@ void TrimPic::TrimPicture()
                 point.setY(j*height/h+LineWidth);
                 if(index*w*h+i*h+j>=name.count())
                     break;
-                QImage img1(Path+"\\"+name[index*w*h+i*h+j]);
+                QImage img1(Path+"//"+name[index*w*h+i*h+j]);
                 img1=resizeAndFullfill(img1,width/w-2*LineWidth,height/h-2*LineWidth);
                 Painter.drawImage(point,img1);
                 //save img

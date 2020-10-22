@@ -1,7 +1,7 @@
 #include "trimpic.h"
 #include <QPainter>
 #include <QDir>
-#include "omp.h"
+#include <thread>
 TrimPic::TrimPic(QObject *parent) : QObject(parent)
 {
 
@@ -10,7 +10,7 @@ TrimPic::~TrimPic()
 {
     unlockButton(true);
 }
-QImage TrimPic::resizeAndFullfill(QImage input,int w,int h)
+QImage TrimPic::resizeAndFullfill(QImage input,int w,int h,bool forceResize)
 {
     QImage result=QImage(w,h,QImage::Format_RGB888);
     QPainter Painter(&result);
@@ -46,7 +46,31 @@ QImage TrimPic::resizeAndFullfill(QImage input,int w,int h)
     Painter.drawImage(point,input);
     return (result);
 }
+void TrimPic::MergeIMG(int index,QStringList name,int w,int h, int width, int
+height, int LineWidth,QString Path,int quality,bool forceResize)
+{
+    //prepare a white pic
+    QImage result=QImage(width,height,QImage::Format_RGB888);
+    QPainter Painter(&result);
+    Painter.fillRect(0,0,width,height,Qt::white);
 
+    for(int i=0;i<w;i++)
+        for(int j=0;j<h;j++)
+        {
+            QPointF point;
+            point.setX(i*width/w+LineWidth);
+            point.setY(j*height/h+LineWidth);
+            if(index*w*h+i*h+j>=name.count())
+                break;
+            QImage img1(Path+"//"+name[index*w*h+i*h+j]);
+            img1=resizeAndFullfill(img1,width/w-2*LineWidth,height/h-2*LineWidth,forceResize);
+            Painter.drawImage(point,img1);
+            //save img
+        }
+
+    result.save(Path+"//result//"+QString::number(index)+".jpg","JPG",quality);
+
+}
 void TrimPic::TrimPicture()
 {
     //init path
@@ -75,37 +99,23 @@ void TrimPic::TrimPicture()
     int resultmaxIndex=name.count()/(w*h);
     if(name.count()%(w*h)>0)
         resultmaxIndex++;
-#pragma omp parallel for
-    for(index=0;index<resultmaxIndex;index++)
+    std::thread worker[16];
+    for(index=0;index<resultmaxIndex;index+=std::thread::hardware_concurrency())
     {
-        //prepare a white pic
-        QImage result=QImage(width,height,QImage::Format_RGB888);
-        QPainter Painter(&result);
-        Painter.fillRect(0,0,width,height,Qt::white);
-
-        for(int i=0;i<w;i++)
-            for(int j=0;j<h;j++)
+            for(int i=0;i<std::thread::hardware_concurrency()&&i+index<resultmaxIndex;i++)
             {
-                QPointF point;
-                point.setX(i*width/w+LineWidth);
-                point.setY(j*height/h+LineWidth);
-                if(index*w*h+i*h+j>=name.count())
-                    break;
-                QImage img1(Path+"//"+name[index*w*h+i*h+j]);
-                img1=resizeAndFullfill(img1,width/w-2*LineWidth,height/h-2*LineWidth);
-                Painter.drawImage(point,img1);
-                //save img
-            }
+                worker[i]=std::thread(MergeIMG,index+i,name,w,h,width,height,LineWidth,Path,quality,forceResize);
 
-        result.save(Path+"//result//"+QString::number(index)+".jpg","JPG",quality);
-#pragma omp critical
-        {
+            }
+            for(int i=0;i<std::thread::hardware_concurrency()&&i+index<resultmaxIndex;i++)
+            {
+                worker[i].join();
+            }
             emit progress(showindex*w*h*100/name.count());
             showindex++;
-        }
     }
     emit progress(100);
-    echoInfo(QString("图像已保存在")+Path+QString("/result文件夹下。"));
+    echoInfo(QString("图像已保存在")+Path+QString("/result文件夹下。\n")+QString::number(resultmaxIndex)+QString("张照片已拼接。"));
     unlockButton(true);
     quit();
 

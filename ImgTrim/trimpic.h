@@ -25,7 +25,8 @@ signals:
     void unlockButton(bool T);
     void quit();
 private:
-    QImage resizeAndFullfill(QImage input,int w,int h);
+    static QImage resizeAndFullfill(QImage input, int w, int h, bool forceResize);
+    static void MergeIMG(int index,QStringList name,int w,int h, int width, int height, int LineWidth,QString Path,int quality,bool forceResize);
 public slots:
     void TrimPicture();
 };

@@ -99,7 +99,7 @@ void TrimPic::TrimPicture()
     int resultmaxIndex=name.count()/(w*h);
     if(name.count()%(w*h)>0)
         resultmaxIndex++;
-    std::thread worker[16];
+    std::thread worker[std::thread::hardware_concurrency()];
     for(index=0;index<resultmaxIndex;index+=std::thread::hardware_concurrency())
     {
             for(int i=0;i<std::thread::hardware_concurrency()&&i+index<resultmaxIndex;i++)
@@ -115,7 +115,7 @@ void TrimPic::TrimPicture()
             showindex++;
     }
     emit progress(100);
-    echoInfo(QString("图像已保存在")+Path+QString("/result文件夹下。\n")+QString::number(resultmaxIndex)+QString("张照片已拼接。"));
+    echoInfo(QString("图像已保存在")+Path+QString("/result文件夹下。\n")+QString("照片已拼接为")+QString::number(resultmaxIndex)+QString("张。\n使用了")+QString::number(std::thread::hardware_concurrency())+QString("个线程。"));
     unlockButton(true);
     quit();
 
